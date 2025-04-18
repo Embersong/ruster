@@ -6,6 +6,7 @@ public class FPSPlayerController : MonoBehaviour
     [Header("Movement")]
     public float walkSpeed = 5f;
     public float runSpeed = 10f;
+   // public float crouchSpeed = 2f;
     public float gravity = -9.81f;
     public float jumpHeight = 1.5f;
 
@@ -19,16 +20,44 @@ public class FPSPlayerController : MonoBehaviour
     private float verticalRotation = 0f;
     private bool isGrounded;
 
+    public float crouchHeight = 1f;
+    private float originalHeight;
+
     void Start()
     {
         characterController = GetComponent<CharacterController>();
         Cursor.lockState = CursorLockMode.Locked; // Блокировка курсора
+        originalHeight = characterController.height;
+    }
+
+    void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawRay(transform.position, Vector3.down * 1.2f);
     }
 
     void Update()
     {
+        // Движение
+        float speed = Input.GetKey(KeyCode.LeftShift) ? runSpeed : walkSpeed;
+        float moveX = Input.GetAxis("Horizontal");
+        float moveZ = Input.GetAxis("Vertical");
+
+        //Приседание
+        if (Input.GetKeyDown(KeyCode.C))
+        {
+            characterController.height = crouchHeight;
+
+        }
+        else if (Input.GetKeyUp(KeyCode.C))
+        {
+            characterController.height = originalHeight;
+        }
+
         // Проверка на земле ли игрок
-        isGrounded = characterController.isGrounded;
+        //isGrounded = characterController.isGrounded;
+        isGrounded = Physics.Raycast(transform.position, Vector3.down, 1.5f, LayerMask.GetMask("Ground"));
+
         if (isGrounded && velocity.y < 0)
         {
             velocity.y = -2f; // Прижимаем к земле
@@ -43,10 +72,7 @@ public class FPSPlayerController : MonoBehaviour
         cameraTransform.localRotation = Quaternion.Euler(verticalRotation, 0, 0);
         transform.Rotate(Vector3.up * mouseX);
 
-        // Движение
-        float speed = Input.GetKey(KeyCode.LeftShift) ? runSpeed : walkSpeed;
-        float moveX = Input.GetAxis("Horizontal");
-        float moveZ = Input.GetAxis("Vertical");
+       
 
         Vector3 move = transform.right * moveX + transform.forward * moveZ;
         characterController.Move(move * speed * Time.deltaTime);
