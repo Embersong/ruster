@@ -1,7 +1,7 @@
 using UnityEngine;
 
 [RequireComponent(typeof(CharacterController))]
-public class FPSPlayerController : MonoBehaviour
+public class PlayerController : MonoBehaviour
 {
     [Header("Movement")]
     public float walkSpeed = 5f;
@@ -23,11 +23,14 @@ public class FPSPlayerController : MonoBehaviour
     public float crouchHeight = 1f;
     private float originalHeight;
 
+
     void Start()
     {
         characterController = GetComponent<CharacterController>();
         Cursor.lockState = CursorLockMode.Locked; // Блокировка курсора
         originalHeight = characterController.height;
+
+   
     }
 
     void OnDrawGizmos()
@@ -86,5 +89,9 @@ public class FPSPlayerController : MonoBehaviour
         // Гравитация
         velocity.y += gravity * Time.deltaTime;
         characterController.Move(velocity * Time.deltaTime);
+
+
+
+
     }
 }
