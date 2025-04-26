@@ -20,6 +20,7 @@ public class PlayerController : MonoBehaviour
     private Vector3 velocity;
     private float verticalRotation = 0f;
     private bool isGrounded;
+    public bool isUnderwater = false;  // Проверка воды
 
     public float crouchHeight = 1f;
     private float originalHeight;
@@ -82,13 +83,26 @@ public class PlayerController : MonoBehaviour
         characterController.Move(move * speed * moveMultiplier * Time.deltaTime);
 
         // Прыжок
-        if (Input.GetButtonDown("Jump") && isGrounded && moveMultiplier == 1)
+        if (Input.GetButtonDown("Jump") && isGrounded && !isUnderwater)
         {
             velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
         }
 
+        if (Input.GetButtonDown("Jump") && isUnderwater)
+        {
+            velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity / 10);
+        }
+
+
+        if (!isUnderwater)
+        {
+            velocity.y += gravity * Time.deltaTime;
+        } else
+        {
+            velocity.y += gravity / 10 * Time.deltaTime;
+        }
         // Гравитация
-        velocity.y += gravity * Time.deltaTime;
+        
         characterController.Move(velocity * Time.deltaTime);
 
 
@@ -102,6 +116,7 @@ public class PlayerController : MonoBehaviour
         if (other.CompareTag("water"))
         {
             moveMultiplier = 0.5f;
+            isUnderwater = true;
         }
     }
 
@@ -110,6 +125,7 @@ public class PlayerController : MonoBehaviour
         if (other.CompareTag("water"))
         {
             moveMultiplier = 1f;
+            isUnderwater = false;
         }
     }
 }
