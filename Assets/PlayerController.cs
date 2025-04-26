@@ -9,6 +9,7 @@ public class PlayerController : MonoBehaviour
    // public float crouchSpeed = 2f;
     public float gravity = -9.81f;
     public float jumpHeight = 1.5f;
+    private float moveMultiplier = 1f;
 
     [Header("Camera")]
     public Transform cameraTransform;
@@ -42,7 +43,7 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         // Движение
-        float speed = Input.GetKey(KeyCode.LeftShift) ? runSpeed : walkSpeed;
+        float speed = Input.GetKey(KeyCode.LeftShift) && moveMultiplier == 1 ? runSpeed : walkSpeed;
         float moveX = Input.GetAxis("Horizontal");
         float moveZ = Input.GetAxis("Vertical");
 
@@ -78,10 +79,10 @@ public class PlayerController : MonoBehaviour
        
 
         Vector3 move = transform.right * moveX + transform.forward * moveZ;
-        characterController.Move(move * speed * Time.deltaTime);
+        characterController.Move(move * speed * moveMultiplier * Time.deltaTime);
 
         // Прыжок
-        if (Input.GetButtonDown("Jump") && isGrounded)
+        if (Input.GetButtonDown("Jump") && isGrounded && moveMultiplier == 1)
         {
             velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
         }
@@ -93,5 +94,22 @@ public class PlayerController : MonoBehaviour
 
 
 
+    }
+
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("water"))
+        {
+            moveMultiplier = 0.5f;
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.CompareTag("water"))
+        {
+            moveMultiplier = 1f;
+        }
     }
 }
