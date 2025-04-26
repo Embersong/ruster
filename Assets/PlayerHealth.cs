@@ -1,6 +1,8 @@
 using UnityEngine;
 using UnityEngine.UI; // Для работы с UI
 using TMPro;
+using System.Collections;
+using UnityEngine.SceneManagement;
 
 public class PlayerHealth : MonoBehaviour
 {
@@ -14,6 +16,17 @@ public class PlayerHealth : MonoBehaviour
     {
         currentHealth = maxHealth;
         UpdateHealthUI();
+        StartCoroutine(HealRoutine());
+
+    }
+
+    IEnumerator HealRoutine()
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(1f);
+            Heal(1); // Передаём параметр
+        }
     }
 
     // Метод для получения урона
@@ -29,7 +42,7 @@ public class PlayerHealth : MonoBehaviour
     }
 
     // Метод для лечения
-    public void Heal(int healAmount)
+    public void Heal(int healAmount = 5)
     {
         currentHealth += healAmount;
         if (currentHealth > maxHealth)
@@ -59,6 +72,9 @@ public class PlayerHealth : MonoBehaviour
     {
         Debug.Log("Персонаж умер!");
         // Здесь можно добавить перезагрузку уровня или другие действия
+        string currentSceneName = SceneManager.GetActiveScene().name;
+        // Перезагружаем сцену
+        SceneManager.LoadScene(currentSceneName);
     }
 
 

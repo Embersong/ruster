@@ -1,12 +1,23 @@
 using UnityEngine;
+using UnityEngine.Rendering.PostProcessing;
 
 public class WaterDamage : MonoBehaviour
 {
+    public PostProcessVolume volume;
+    private DepthOfField DepthOfField;
+
     public int damagePerSecond = 5; // Урон в секунду
     public float damageInterval = 1f; // Как часто наносить урон (раз в секунду)
     
     private float timer;
     private PlayerHealth playerHealth; // Ссылка на скрипт здоровья игрока
+
+    private void Start()
+    {
+        volume.profile.TryGetSettings(out DepthOfField);
+    }
+
+
 
     void OnTriggerEnter(Collider other)
     {
@@ -19,6 +30,7 @@ public class WaterDamage : MonoBehaviour
 
     void OnTriggerStay(Collider other)
     {
+        DepthOfField.active = true;
         // Если игрок в воде, наносим периодический урон
         if (playerHealth != null && other.CompareTag("Player"))
         {
@@ -26,6 +38,7 @@ public class WaterDamage : MonoBehaviour
             
             if (timer >= damageInterval)
             {
+                
                 playerHealth.TakeDamage(damagePerSecond);
                 timer = 0f;
             }
@@ -39,6 +52,7 @@ public class WaterDamage : MonoBehaviour
         {
             playerHealth = null;
             timer = 0f;
+            DepthOfField.active = false;
         }
     }
 }
