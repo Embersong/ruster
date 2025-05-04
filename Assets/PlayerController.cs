@@ -82,7 +82,7 @@ public class PlayerController : MonoBehaviour
         Vector3 move = transform.right * moveX + transform.forward * moveZ;
         characterController.Move(move * speed * moveMultiplier * Time.deltaTime);
 
-        // Прыжок
+        // Прыжок.
         if (Input.GetButtonDown("Jump") && isGrounded && !isUnderwater)
         {
             velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);

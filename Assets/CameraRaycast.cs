@@ -94,7 +94,7 @@ public class OffsetRaycast : MonoBehaviour
     {
   
 
-        // Создаём новый маркер
+        // Создаём новый маркер.
         if (hitMarkerPrefab != null)
         {
             currentMarker = Instantiate(hitMarkerPrefab, position, Quaternion.identity);

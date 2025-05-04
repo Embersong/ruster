@@ -67,7 +67,7 @@ public class PlayerHealth : MonoBehaviour
         }
     }
 
-    // Метод для смерти персонажа
+    // Метод для смерти персонажа.
     void Die()
     {
         Debug.Log("Персонаж умер!");

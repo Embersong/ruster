@@ -47,7 +47,7 @@ public class WaterDamage : MonoBehaviour
 
     void OnTriggerExit(Collider other)
     {
-        // Игрок вышел из воды — обнуляем ссылку
+        // Игрок вышел из воды — обнуляем ссылку.
         if (other.CompareTag("Player"))
         {
             playerHealth = null;

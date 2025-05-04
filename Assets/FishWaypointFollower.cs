@@ -13,14 +13,14 @@ public class WaypointFollower : MonoBehaviour
     {
         if (waypoints.Length == 0) return;
 
-        // Получаем текущий вейпоинт
+        // Получаем текущий вейпоинт .
         Transform targetWaypoint = waypoints[currentWaypointIndex];
 
         // Поворачиваем объект к точке (мгновенно)
         transform.LookAt(targetWaypoint);
 
         // Двигаемся вперед
-        transform.Translate(Vector3.left * moveSpeed * Time.deltaTime);
+        transform.Translate(Vector3.forward * moveSpeed * Time.deltaTime, Space.Self);
 
         // Проверяем достижение точки
         if (Vector3.Distance(transform.position, targetWaypoint.position) < minDistanceToWaypoint)
